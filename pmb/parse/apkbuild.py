@@ -19,6 +19,7 @@ along with pmbootstrap.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import logging
 import pmb.config
+import pmb.parse.version
 
 
 def replace_variables(apkbuild):
@@ -159,6 +160,13 @@ def apkbuild(args, path):
     # Sanity check: arch
     if not len(ret["arch"]):
         raise RuntimeError("Arch must not be empty: " + path)
+
+    # Sanity check: pkgver
+    if "-r" in ret["pkgver"] or not pmb.parse.version.validate(ret["pkgver"]):
+        logging.info("NOTE: Valid pkgvers are described here:")
+        logging.info("<https://wiki.alpinelinux.org/wiki/APKBUILD_Reference#pkgver>")
+        raise RuntimeError("Invalid pkgver '" + ret["pkgver"] +
+                           "' in APKBUILD: " + path)
 
     # Fill cache
     args.cache["apkbuild"][path] = ret
