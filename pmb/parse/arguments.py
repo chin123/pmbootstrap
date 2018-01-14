@@ -309,12 +309,12 @@ def arguments():
     for action in [checksum, build, aportgen]:
         action.add_argument("packages", nargs="+")
 
-    # Action: kconfig_check / parse_apkbuild
+    # Action: kconfig_check / apkbuild_parse
     kconfig_check = sub.add_parser("kconfig_check", help="check, whether all"
                                    " the necessary options are"
                                    " enabled/disabled in the kernel config")
-    parse_apkbuild = sub.add_parser("parse_apkbuild")
-    for action in [kconfig_check, parse_apkbuild]:
+    apkbuild_parse = sub.add_parser("apkbuild_parse")
+    for action in [kconfig_check, apkbuild_parse]:
         action.add_argument("packages", nargs="*")
 
     # Action: challenge
@@ -332,10 +332,10 @@ def arguments():
                                 " .apk, or must be named"
                                 " APKINDEX.tar.gz.")
 
-    # Action: parse_apkindex
-    parse_apkindex = sub.add_parser("parse_apkindex")
-    parse_apkindex.add_argument("apkindex_path")
-    parse_apkindex.add_argument("package", default=None, nargs="?")
+    # Action: apkindex_parse
+    apkindex_parse = sub.add_parser("apkindex_parse")
+    apkindex_parse.add_argument("apkindex_path")
+    apkindex_parse.add_argument("package", default=None, nargs="?")
 
     # Action: config
     config = sub.add_parser("config",

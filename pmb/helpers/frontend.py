@@ -237,7 +237,7 @@ def kconfig_check(args):
         raise RuntimeError("kconfig_check failed!")
 
 
-def parse_apkbuild(args):
+def apkbuild_parse(args):
     # Default to all packages
     packages = args.packages
     if not packages:
@@ -254,7 +254,7 @@ def parse_apkbuild(args):
                          sort_keys=True))
 
 
-def parse_apkindex(args):
+def apkindex_parse(args):
     result = pmb.parse.apkindex.parse(args, args.apkindex_path)
     if args.package:
         if args.package not in result:
