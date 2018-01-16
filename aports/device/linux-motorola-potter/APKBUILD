@@ -1,4 +1,4 @@
-# Kernel config based on: arch/arm64/configs/(CHANGEME!)
+# Kernel config based on: arch/arm64/configs/potter_defconfig
 
 pkgname="linux-motorola-potter"
 pkgver=3.18.91
