@@ -123,6 +123,33 @@ def arguments_qemu(subparser):
     return ret
 
 
+def arguments_pkgrel_bump(subparser):
+    ret = subparser.add_parser("pkgrel_bump", help="increase the pkgrel to"
+                               " indicate that a package must be rebuilt"
+                               " because of a dependency change")
+    ret.add_argument("--dry", action="store_true", help="instead of modifying"
+                     " APKBUILDs, exit with >0 when a package would have been"
+                     " bumped")
+
+    # Mutually exclusive: "--auto" or package names
+    mode = ret.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--auto", action="store_true", help="all packages which"
+                      " depend on a library which had an incompatible update"
+                      " (libraries with a soname bump)")
+    mode.add_argument("packages", nargs="*", default=[])
+    return ret
+
+
+def arguments_newapkbuild(subparser):
+    ret = subparser.add_parser("newapkbuild", help="get a template to package"
+                               " new software")
+    ret.add_argument("folder", help="aports subfolder, where the new aport will"
+                     " be located (main, cross, device, ...)")
+    ret.add_argument("args_passed", nargs=argparse.REMAINDER,
+                     help="arguments directly passed to Alpine's newapkbuild,"
+                     " more information: 'pmbootstrap newapkbuild main -h'")
+
+
 def arguments():
     parser = argparse.ArgumentParser(prog="pmbootstrap")
     arch_native = pmb.parse.arch.alpine_native()
@@ -154,6 +181,10 @@ def arguments():
                         " cause normal 'are you sure?' prompts to be"
                         " disabled!",
                         action="store_true")
+    parser.add_argument("--as-root", help="Allow running as root (not"
+                        " recommended, may screw up your work folders"
+                        " directory permissions!)", dest="as_root",
+                        action="store_true")
 
     # Logging
     parser.add_argument("-l", "--log", dest="log", default=None,
@@ -179,6 +210,8 @@ def arguments():
     arguments_flasher(sub)
     arguments_initfs(sub)
     arguments_qemu(sub)
+    arguments_pkgrel_bump(sub)
+    arguments_newapkbuild(sub)
 
     # Action: log
     log = sub.add_parser("log", help="follow the pmbootstrap logfile")
@@ -266,8 +299,8 @@ def arguments():
 
     # Action: build / checksum / aportgen
     checksum = sub.add_parser("checksum", help="update aport checksums")
-    aportgen = sub.add_parser("aportgen", help="generate a package build recipe"
-                              " (aport/APKBUILD) based on an upstream aport from Alpine")
+    aportgen = sub.add_parser("aportgen", help="generate a postmarketOS"
+                              " specific package build recipe (aport/APKBUILD)")
     build = sub.add_parser("build", help="create a package for a"
                            " specific architecture")
     build.add_argument("--arch", choices=arch_choices, default=None,
